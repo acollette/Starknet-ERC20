@@ -92,3 +92,22 @@ func withdraw_all_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_c
 
     return (amount,);
 }
+
+@external
+func deposit_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    amount: Uint256
+) -> (new_user_balance: Uint256) {
+
+    let (caller) = get_caller_address();
+    let (dtk_address) = dummy_token_address_storage.read();
+    let (this) = get_contract_address();
+
+    let (pre_user_balance) = user_claimed_tokens.read(caller);
+    let (new_user_balance, carry) = uint256_add(pre_user_balance, amount);
+
+    user_claimed_tokens.write(caller, new_user_balance);
+
+    IDTKERC20.transferFrom(dtk_address, caller, this, amount);
+
+    return (new_user_balance,);
+}
