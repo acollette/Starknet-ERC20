@@ -8,6 +8,7 @@ from starkware.starknet.common.syscalls import get_caller_address, get_contract_
 from starkware.cairo.common.math import assert_not_zero
 
 from openzeppelin.token.erc20.library import ERC20
+from contracts.token.ERC20.IERC20 import IERC20
 
 from contracts.token.ERC20.IDTKERC20 import IDTKERC20
 
@@ -72,6 +73,22 @@ func get_tokens_from_contract{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
     let (new_user_balance, carry) = uint256_add(pre_user_balance, amount);
 
     user_claimed_tokens.write(caller, new_user_balance);
+
+    return (amount,);
+}
+
+@external
+func withdraw_all_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
+    amount: Uint256
+) {
+    let (caller) = get_caller_address();
+    let (amount) = user_claimed_tokens.read(caller);
+    let (dtk_address) = dummy_token_address_storage.read();
+
+    let new_amount: Uint256 = Uint256(0,0);
+
+    user_claimed_tokens.write(caller, new_amount);
+    IDTKERC20.transfer(dtk_address, caller, amount);
 
     return (amount,);
 }
