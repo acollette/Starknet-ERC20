@@ -111,3 +111,4 @@ func deposit_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
 
     return (new_user_balance,);
 }
+
