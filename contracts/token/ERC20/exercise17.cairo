@@ -74,9 +74,7 @@ func get_tokens_from_contract{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
 
     let (after_dtk_balance) = IDTKERC20.balanceOf(dtk_address, this);
     let (amount) = uint256_sub(after_dtk_balance, pre_dtk_balance);
-
     let (pre_user_balance) = user_claimed_tokens.read(caller);
-
     let (new_user_balance, carry) = uint256_add(pre_user_balance, amount);
 
     user_claimed_tokens.write(caller, new_user_balance);
@@ -91,7 +89,6 @@ func withdraw_all_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_c
     let (caller) = get_caller_address();
     let (amount) = user_claimed_tokens.read(caller);
     let (dtk_address) = dummy_token_address_storage.read();
-
     let new_amount: Uint256 = Uint256(0,0);
 
     user_claimed_tokens.write(caller, new_amount);
@@ -109,7 +106,6 @@ func deposit_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     let (dtk_address) = dummy_token_address_storage.read();
     let (this) = get_contract_address();
     let (exercise_token) = exercise_token_address_storage.read();
-
     let (pre_user_balance) = user_claimed_tokens.read(caller);
     let (new_user_balance, carry) = uint256_add(pre_user_balance, amount);
 
