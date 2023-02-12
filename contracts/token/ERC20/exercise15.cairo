@@ -11,6 +11,7 @@ from openzeppelin.token.erc20.library import ERC20
 from contracts.token.ERC20.IERC20 import IERC20
 
 from contracts.token.ERC20.IDTKERC20 import IDTKERC20
+from contracts.token.ERC20.IExerciseSolutionToken import IExerciseSolutionToken
 
 ////////// Declaring storage vars //////////
 
@@ -19,8 +20,13 @@ func dummy_token_address_storage() -> (dummy_token_address_storage: felt) {
 }
 
 @storage_var
+func exercise_token_address_storage() -> (exercise_token_address_storage: felt) {
+}
+
+@storage_var
 func user_claimed_tokens(account: felt) -> (amount: Uint256) {
 }
+
 
 ////////// Declaring getters //////////
 
@@ -44,9 +50,10 @@ func tokens_in_custody{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    _dummy_token_address: felt
+    _dummy_token_address: felt, _exercise_token: felt
 ) {
     dummy_token_address_storage.write(_dummy_token_address);
+    exercise_token_address_storage.write(_exercise_token);
     return ();
 }
 
@@ -101,6 +108,7 @@ func deposit_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     let (caller) = get_caller_address();
     let (dtk_address) = dummy_token_address_storage.read();
     let (this) = get_contract_address();
+    let (exercise_token) = exercise_token_address_storage.read();
 
     let (pre_user_balance) = user_claimed_tokens.read(caller);
     let (new_user_balance, carry) = uint256_add(pre_user_balance, amount);
@@ -108,6 +116,7 @@ func deposit_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     user_claimed_tokens.write(caller, new_user_balance);
 
     IDTKERC20.transferFrom(dtk_address, caller, this, amount);
+    IExerciseSolutionToken.mint(exercise_token, amount, user);
 
     return (new_user_balance,);
 }

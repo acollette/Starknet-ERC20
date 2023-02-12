@@ -27,13 +27,12 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 ////////// Externals //////////
 @external
 func mint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    amount: Uint256
+    amount: Uint256, user: felt
 ) -> (success: felt) {
 
     Ownable.assert_only_owner();
 
-    let (caller) = get_caller_address();
-    ERC20._mint(caller, amount);
+    ERC20._mint(user, amount);
     return(1,);
 }
 
