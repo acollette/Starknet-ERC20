@@ -24,4 +24,4 @@ def uint256_to_int(uint256):
 def uint256(val):
     return (val & 2**128-1, (val & (2**256-2**128)) >> 128)
 
-print(str_to_felt(UTRS))
+print(str_to_felt("EXE"))

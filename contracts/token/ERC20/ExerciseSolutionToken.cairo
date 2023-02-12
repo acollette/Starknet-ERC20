@@ -16,10 +16,35 @@ from contracts.token.ERC20.IERC20 import IERC20
 
 ////////// Declaring getters //////////
 
+@view
+func name{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (name: felt) {
+    return ERC20.name();
+}
+
+@view
+func symbol{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (symbol: felt) {
+    return ERC20.symbol();
+}
+
+@view
+func owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (owner: felt) {
+    return Ownable.owner();
+}
+
+@view
+func balanceOf{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    account: felt
+) -> (balance: Uint256) {
+    return ERC20.balance_of(account);
+}
+
 
 ////////// Constructor //////////
 @constructor
-func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(owner: felt) {
+func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    owner: felt
+) {
+    ERC20.initializer('Exercise', 'EXE', 18);
     Ownable.initializer(owner);
     return ();
 }
@@ -44,3 +69,23 @@ func set_new_owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     return(1,);    
 }
 
+@external
+func approve{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    spender: felt, amount: Uint256
+) -> (success: felt) {
+    return ERC20.approve(spender, amount);
+}
+
+@external
+func transfer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    recipient: felt, amount: Uint256
+) -> (success: felt) {
+    return ERC20.transfer(recipient, amount);
+}
+
+@external
+func transferFrom{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    sender: felt, recipient: felt, amount: Uint256
+) -> (success: felt) {
+    return ERC20.transfer_from(sender, recipient, amount);
+}

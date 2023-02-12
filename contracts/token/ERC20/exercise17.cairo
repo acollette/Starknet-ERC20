@@ -116,7 +116,7 @@ func deposit_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_
     user_claimed_tokens.write(caller, new_user_balance);
 
     IDTKERC20.transferFrom(dtk_address, caller, this, amount);
-    IExerciseSolutionToken.mint(exercise_token, amount, user);
+    IExerciseSolutionToken.mint(exercise_token, amount, caller);
 
     return (new_user_balance,);
 }
