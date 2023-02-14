@@ -90,8 +90,12 @@ func withdraw_all_tokens{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_c
     let (amount) = user_claimed_tokens.read(caller);
     let (dtk_address) = dummy_token_address_storage.read();
     let new_amount: Uint256 = Uint256(0,0);
+    let (exercise_token) = exercise_token_address_storage.read();
+    let (this) = get_contract_address();
 
     user_claimed_tokens.write(caller, new_amount);
+    IExerciseSolutionToken.transferFrom(exercise_token, caller, this, amount);
+    IExerciseSolutionToken.burn(exercise_token, amount);
     IDTKERC20.transfer(dtk_address, caller, amount);
 
     return (amount,);

@@ -9,4 +9,12 @@ namespace IExerciseSolutionToken {
     func mint(amount: Uint256, user: felt) -> (success: felt) {
     }
 
+    func transferFrom(sender: felt, recipient: felt, amount: Uint256) -> (success: felt) {
+    }
+
+    func burn(amount: Uint256) {
+    }
+
 }
+
+

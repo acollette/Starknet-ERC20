@@ -89,3 +89,12 @@ func transferFrom{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 ) -> (success: felt) {
     return ERC20.transfer_from(sender, recipient, amount);
 }
+
+@external
+func burn{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    amount: Uint256
+) {
+    let (owner) = get_caller_address();
+    ERC20._burn(owner, amount);
+    return ();
+}
